@@ -10,6 +10,8 @@ function save_options() {
 
     if (input.name.match("name")) {
       tmpEnvironments[index].name = input.value;
+    } else if (input.name.match("href")) {
+      tmpEnvironments[index].href = input.value;
     } else if (input.name.match("url")) {
       tmpEnvironments[index].url = input.value;
     }
@@ -20,8 +22,10 @@ function save_options() {
   for (let key of Object.keys(tmpEnvironments)) {
     let data = tmpEnvironments[key];
 
-    if ((data.name && data.name.length) && (data.url && data.url.length)) {
-      environments[data.name] = data.url;
+    if (data.name && data.name.length && data.url && data.url.length) {
+      environments[data.name] = {};
+      environments[data.name].href = data.href;
+      environments[data.name].url = data.url;
     }
   }
 
@@ -40,10 +44,12 @@ function restore_options() {
   }, function(items) {
     let index = 1;
     for (let key of Object.keys(items.storedEnvironments)) {
-      let url = items.storedEnvironments[key];
+      let url = items.storedEnvironments[key].url;
+      let href = items.storedEnvironments[key].href;
       let configElement = $('#deploy_spy_configuration')[0];
 
       configElement[`name_${index}`].value = key;
+      configElement[`href_${index}`].value = href;
       configElement[`url_${index}`].value = url;
 
       index++;

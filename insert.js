@@ -1,9 +1,10 @@
 const deploymentJSON = {};
 
 function initializeData() {
-  function loadJSON(environment, url) {
+  function loadJSON(environment, url, href) {
     $.getJSON(url, function(data) {
       deploymentJSON[environment] = data;
+      deploymentJSON[environment].href = href;
     });
   }
 
@@ -11,11 +12,14 @@ function initializeData() {
     storedEnvironments: {}
   }, function(items) {
     for (let key of Object.keys(items.storedEnvironments)) {
-      loadJSON(key, items.storedEnvironments[key]);
+      loadJSON(
+        key,
+        items.storedEnvironments[key].url,
+        items.storedEnvironments[key].href
+      );
     }
   });
 }
-
 
 function modifyExpandedStory(e) {
   function deploymentHTML(environments) {
@@ -24,10 +28,18 @@ function modifyExpandedStory(e) {
           <div>
               <h4>Deployed To</h4>
               <div class="deploymentsContainer">
-                  ${environments.join(', ')}
+                  ${environments.join("")}
               </div>
           </div>
       </section>`;
+  }
+
+  function deploymentDest(environment, href) {
+    if (!!href) {
+      return `<a href='${href}' target='_blank'>${environment}</a>`;
+    }
+
+    return `<div>${environment}</div>`;
   }
 
   function calculateEnvironmentsForStory(storyId) {
@@ -35,7 +47,9 @@ function modifyExpandedStory(e) {
 
     for (let environment of Object.keys(deploymentJSON)) {
       if (deploymentJSON[environment][storyId]) {
-        environments.push(environment);
+        environments.push(
+          deploymentDest(environment, deploymentJSON[environment].href)
+        );
       }
     }
 
