@@ -20,13 +20,14 @@ Deploy Spy can be configured via the "Options" link on the Chrome Extension entr
 
 Configure the extension with these three environments like so:
 
-| Environment   | URL**                                    |
-| ------------- |------------------------------------------|
-| beta          | https://beta.example.com/commits.json    |
-| staging       | https://staging.example.com/commits.json |
-| testing       | https://test.example.com/commits.json    |
+| Environment   | Destination URL**                        | Commits URL**                            |
+| ------------- |------------------------------------------|------------------------------------------|
+| beta          | https://beta.example.com/                | https://beta.example.com/commits.json    |
+| staging       | https://staging.example.com/             | https://staging.example.com/commits.json |
+| testing       |                                          | https://test.example.com/commits.json    |
 
-_**Note: The destination URLs must be served via HTTPS._
+_**Note: The commit URLs must be served via HTTPS._
+_**Note: Omit destination URLs to refrain from creating a clickable link._
 
 Alternately, you can import a `deploy_spy_config.json` from
 a known hosted location, which
@@ -34,8 +35,14 @@ is a json object containing environments and URLs, e.g.:
 
 ```
 {
-  "beta": "https://beta.example.com/commits.json",
-  "staging": "https://staging.example.com/commits.json"
+  "beta": {
+    "href": "https://beta.example.com/",
+    "url": "https://beta.example.com/commits.json"
+  },
+  "staging": {
+    "href": "https://staging.example.com/",
+    "url": "https://staging.example.com/commits.json"
+  }
 }
 ```
 
